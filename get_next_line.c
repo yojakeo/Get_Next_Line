@@ -6,9 +6,11 @@
 /*   By: japarbs <japarbs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/27 01:32:33 by japarbs           #+#    #+#             */
-/*   Updated: 2019/05/30 17:10:35 by japarbs          ###   ########.fr       */
+/*   Updated: 2019/05/31 00:02:34 by japarbs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "get_next_line.h"
 
 int	read_line(int fd, char **line)
 {
