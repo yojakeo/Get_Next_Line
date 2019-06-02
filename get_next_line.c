@@ -6,7 +6,7 @@
 /*   By: japarbs <japarbs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/27 01:32:33 by japarbs           #+#    #+#             */
-/*   Updated: 2019/06/02 03:56:55 by japarbs          ###   ########.fr       */
+/*   Updated: 2019/06/02 04:18:51 by japarbs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,19 +29,21 @@ char	**read_line(int fd, char **line, size_t line_index)
 			EOF = 1;
 		i = ft_findsubstrlen(buffer, '\n');
 		count += i;
-		ft_memcpy(*tmp, buffer, i);
+		ft_memcpy(**(tmp), buffer, i);
 		tmp++;
 		if (i < BUF_SIZE)
 		{
-			*buffer = count;
+			*(buffer) = count;
 			break;
 		}
 	}
+	line[line_index] = ft_strnew(count);
+	return (tmp);
 }
 /*
 **	Copies processed line from read_line to **
 */
-int	process_line(int fd, char **line, size_t line_index)
+int		process_line(int fd, char **line, size_t line_index)
 {
 	size_t			i;
 	int				EOF;
@@ -63,12 +65,15 @@ int	process_line(int fd, char **line, size_t line_index)
 /*
 **	Main function, runs checks and keeps track of line positon & file positon
 */
-int get_next_line(const int fd, char **line)
+int		get_next_line(const int fd, char **line)
 {
 	static size_t	line_index;
 	int rval;
+
+	if (fd < 0 || !line)
+		return (-1);
 	rval = process_line(fd, line, line_index);
-	if (fd < 0 || !line || rval == -1)
+	if (rval == -1)
 		return (-1);
 	if (rval == 0)
 		return (0);

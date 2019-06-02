@@ -6,7 +6,7 @@
 /*   By: japarbs <japarbs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/28 23:43:33 by japarbs           #+#    #+#             */
-/*   Updated: 2019/06/02 03:56:59 by japarbs          ###   ########.fr       */
+/*   Updated: 2019/06/02 04:18:41 by japarbs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 
 # include "libft/libft.h"
 
-int	read_line(int fd, char **line);
-int	process_line(int fd, char **line, size_t line_index);
+char	**read_line(int fd, char **line, size_t line_index);
+int		process_line(int fd, char **line, size_t line_index);
+int		process_line(int fd, char **line, size_t line_index);
 
 #endif
