@@ -6,25 +6,46 @@
 /*   By: japarbs <japarbs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/27 01:32:33 by japarbs           #+#    #+#             */
-/*   Updated: 2019/05/31 00:02:34 by japarbs          ###   ########.fr       */
+/*   Updated: 2019/06/02 03:56:55 by japarbs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int	read_line(int fd, char **line)
+char	**read_line(int fd, char **line, size_t line_index)
 {
+	int				EOF;
 	size_t			count;
 	size_t			i;
-	static size_t	line_index;
 	char			buffer[BUF_SIZE];
+	char			tmp[MAX_BUFFS][BUF_SIZE + 1];
 
 	count = 0;
 	i = 0;
-	while (read(fd, buffer + 1, BUF_SIZE))
-		++count;
-	if (!count || !(line[line_index] = ft_strnew(count)))
-		return (-1);
+	EOF = 0;
+	while (read(fd, buffer, BUF_SIZE))
+	{
+		if (!buffer[BUF_SIZE])
+			EOF = 1;
+		i = ft_findsubstrlen(buffer, '\n');
+		count += i;
+		ft_memcpy(*tmp, buffer, i);
+		tmp++;
+		if (i < BUF_SIZE)
+		{
+			*buffer = count;
+			break;
+		}
+	}
+}
+/*
+**	Copies processed line from read_line to **
+*/
+int	process_line(int fd, char **line, size_t line_index)
+{
+	size_t			i;
+	int				EOF;
+	i = 0;
 	while (count)
 	{
 		if (buffer[i] == '\n')
@@ -35,17 +56,24 @@ int	read_line(int fd, char **line)
 		line[line_index][i] = buffer[i++];
 		--count;
 	}
-	if (!count)
+	if (!count && !EOF)
 		return (0);
+	return (1);
 }
-
+/*
+**	Main function, runs checks and keeps track of line positon & file positon
+*/
 int get_next_line(const int fd, char **line)
 {
 	static size_t	line_index;
-	if (fd <= 0 || !line)
+	int rval;
+	rval = process_line(fd, line, line_index);
+	if (fd < 0 || !line || rval == -1)
 		return (-1);
-
-	return (int	read_line(int fd, char **line));
+	if (rval == 0)
+		return (0);
+	line_index = 0;
+	return (1);
 }
 
 /*
