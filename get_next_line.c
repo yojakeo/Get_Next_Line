@@ -6,32 +6,30 @@
 /*   By: japarbs <japarbs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/27 01:32:33 by japarbs           #+#    #+#             */
-/*   Updated: 2019/06/02 04:18:51 by japarbs          ###   ########.fr       */
+/*   Updated: 2019/06/02 21:05:26 by japarbs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	**read_line(int fd, char **line, size_t line_index)
+char	**read_line(int fd, char **line, size_t line_index, int EOF)
 {
-	int				EOF;
 	size_t			count;
 	size_t			i;
-	char			buffer[BUF_SIZE];
-	char			tmp[MAX_BUFFS][BUF_SIZE + 1];
+	char			buffer[BUFF_SIZE];
+	char			tmp[MAX_BUFFS][BUFF_SIZE + 1];
 
 	count = 0;
 	i = 0;
-	EOF = 0;
-	while (read(fd, buffer, BUF_SIZE))
+	while (read(fd, buffer, BUFF_SIZE))
 	{
-		if (!buffer[BUF_SIZE])
+		if (!buffer[BUFF_SIZE])
 			EOF = 1;
 		i = ft_findsubstrlen(buffer, '\n');
 		count += i;
-		ft_memcpy(**(tmp), buffer, i);
-		tmp++;
-		if (i < BUF_SIZE)
+		ft_memcpy(*(tmp), buffer, i);
+		**(++tmp);
+		if (i < BUFF_SIZE)
 		{
 			*(buffer) = count;
 			break;
@@ -45,20 +43,25 @@ char	**read_line(int fd, char **line, size_t line_index)
 */
 int		process_line(int fd, char **line, size_t line_index)
 {
-	size_t			i;
 	int				EOF;
+	size_t			i;
+	char			**tmp;
+	
+	EOF = 0;
 	i = 0;
-	while (count)
+	tmp = read_line(fd, line, line_index, EOF);
+	while (**(tmp))
 	{
-		if (buffer[i] == '\n')
+		if (*(tmp) == '\n')
 		{
 			line[line_index][i] = '\0';
 			return (0);
 		}
-		line[line_index][i] = buffer[i++];
-		--count;
+		line[line_index][i++] = *(tmp++);
+		if (!*(tmp))
+			**(++tmp);
 	}
-	if (!count && !EOF)
+	if (!EOF)
 		return (0);
 	return (1);
 }
