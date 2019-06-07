@@ -6,7 +6,7 @@
 /*   By: japarbs <japarbs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/27 01:32:33 by japarbs           #+#    #+#             */
-/*   Updated: 2019/06/06 17:35:32 by japarbs          ###   ########.fr       */
+/*   Updated: 2019/06/06 20:23:01 by japarbs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 #define BUFFCHECK	{*(buffer) = count; break;}
 
 /*
-**	Reads line from FD and places buffs to tmp, Allocating the total chars
-**	needed to **line's current index. Returning tmp to be processed
-**	(Coppied from **tmp to *line) by Process_line.
-**	It is passed eof (Bollian) to signal if it is at End Of File.
+**	Reads line from FD and joins the current buff and current index of **line,
+**	allocating the chars as it reads, allowing for dynamic string len.
+**	eof (Bollean) is a signal for End Of File. If the read buff is less
+**	than BUFF_SIZE then eof is triggered and will return 1 (for complete read).
 **	cbl = Current Buffer Length.
 */
 
@@ -36,9 +36,8 @@ int		read_line(int fd, char **line, size_t line_index)
 		if (!buffer[BUFF_SIZE - 1])
 			eof = 1;
 		cbl = ft_findsubstrlen(buffer, '\n');
-		line[line_index] = ft_strjoin(line[line_index], buffer);
-		if (cbl < BUFF_SIZE)
-			BUFFCHECK;
+		if (!(line[line_index] = ft_strjoin(line[line_index], buffer)))
+			return (-1);
 	}
 	if (!eof)
 		return (0);
