@@ -6,7 +6,7 @@
 /*   By: japarbs <japarbs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/08 16:18:40 by japarbs           #+#    #+#             */
-/*   Updated: 2019/06/12 04:09:30 by japarbs          ###   ########.fr       */
+/*   Updated: 2019/06/14 22:27:46 by japarbs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,23 +28,22 @@ int		process_line(int fd, char **line, char **fdarr, int bres)
 	size_t			statsize;
 	char			*tmp;
 
-	if (!bres)
+	if (!bres && !fdarr[fd][0])
 	{
-		free(fdarr[fd]);
-		fdarr[fd] = NULL;
-		return (1);
+		ft_strdel(&fdarr[fd]);
+		return (0);
 	}
 	lenres = ft_strdlen(fdarr[fd], '\n');
 	if (!(*line = ft_strsub(fdarr[fd], 0, lenres)))
 		return (-1);
-	statsize = ft_strlen(ft_strchr(fdarr[fd], '\n'));
+	statsize = ft_strlen(ft_strchr(fdarr[fd], '\n')) - 1;
 	if (!(tmp = ft_strsub(fdarr[fd], lenres + 1, statsize)))
 		return (-1);
-	free(fdarr[fd]);
+	ft_strdel(&fdarr[fd]);
 	if (!(fdarr[fd] = ft_strdup(tmp)))
 		return (-1);
-	free(tmp);
-	return (0);
+	ft_strdel(&tmp);
+	return (1);
 }
 
 /*
@@ -60,7 +59,7 @@ int		process_line(int fd, char **line, char **fdarr, int bres)
 **	allocating the chars as it reads, allowing for dynamic string len.
 **	bres (buffer result) is used to create a NULL terminator in buffer.
 **	bres is also used as an EOF indicator, if bres = 0 then EOF is true.
-**	*tmp string is nessesary to free fdarr[fd] to assure there are no leaks.
+**	*tmp string is nessesary to free &fdarr[fd] to assure there are no leaks.
 **	if a \n is found the while loop breaks and enters phase 2 process_line.
 */
 
@@ -68,7 +67,7 @@ int		get_next_line(const int fd, char **line)
 {
 	static char		*fdarr[OPEN_MAX];
 	int				bres;
-	char			buffer[BUFF_SIZE + 1];
+	char		 	buffer[BUFF_SIZE + 1];
 	char			*tmp;
 
 	if (!fd || fd <= -1 || fd > OPEN_MAX || !line)
@@ -80,10 +79,10 @@ int		get_next_line(const int fd, char **line)
 		buffer[bres] = '\0';
 		if (!(tmp = ft_strjoin(fdarr[fd], buffer)))
 			return (-1);
-		free(fdarr[fd]);
+		ft_strdel(&fdarr[fd]);
 		if (!(fdarr[fd] = ft_strdup(tmp)))
 			return (-1);
-		free(tmp);
+		ft_strdel(&tmp);
 		if (ft_strchr(buffer, '\n'))
 			break ;
 	}
