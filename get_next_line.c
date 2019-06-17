@@ -6,7 +6,7 @@
 /*   By: japarbs <japarbs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/08 16:18:40 by japarbs           #+#    #+#             */
-/*   Updated: 2019/06/14 22:27:46 by japarbs          ###   ########.fr       */
+/*   Updated: 2019/06/17 03:00:45 by japarbs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 /*
 **	Process_line takes the fd's fdarr char string and finds the index of \n.
-**	this index is stored in lenres (length result) 
+**	this index is stored in lenres (length result)
 **	Using that len as how long the line is and pushing all till \n to **line.
 **	after **line is done, the leftover chars are stored in fdarr[fd]
 **	to be used in the next recall of get_next_line.
 **	statsize (static size) is the messured size of the extra bytes.
-**	bres is imported from get_next_line for the EOF check as stated bellow. 
+**	bres is imported from get_next_line for the EOF check as stated bellow.
 */
 
 int		process_line(int fd, char **line, char **fdarr, int bres)
@@ -36,13 +36,11 @@ int		process_line(int fd, char **line, char **fdarr, int bres)
 	lenres = ft_strdlen(fdarr[fd], '\n');
 	if (!(*line = ft_strsub(fdarr[fd], 0, lenres)))
 		return (-1);
-	statsize = ft_strlen(ft_strchr(fdarr[fd], '\n')) - 1;
+	statsize = ft_strlen(ft_strchr(fdarr[fd], '\n'));
 	if (!(tmp = ft_strsub(fdarr[fd], lenres + 1, statsize)))
 		return (-1);
 	ft_strdel(&fdarr[fd]);
-	if (!(fdarr[fd] = ft_strdup(tmp)))
-		return (-1);
-	ft_strdel(&tmp);
+	fdarr[fd] = tmp;
 	return (1);
 }
 
@@ -67,7 +65,7 @@ int		get_next_line(const int fd, char **line)
 {
 	static char		*fdarr[OPEN_MAX];
 	int				bres;
-	char		 	buffer[BUFF_SIZE + 1];
+	char			buffer[BUFF_SIZE + 1];
 	char			*tmp;
 
 	if (!fd || fd <= -1 || fd > OPEN_MAX || !line)
@@ -80,11 +78,11 @@ int		get_next_line(const int fd, char **line)
 		if (!(tmp = ft_strjoin(fdarr[fd], buffer)))
 			return (-1);
 		ft_strdel(&fdarr[fd]);
-		if (!(fdarr[fd] = ft_strdup(tmp)))
-			return (-1);
-		ft_strdel(&tmp);
+		fdarr[fd] = tmp;
 		if (ft_strchr(buffer, '\n'))
 			break ;
 	}
-	return(process_line(fd, line, fdarr, bres));
+	if (bres < 0)
+		return (-1);
+	return (process_line(fd, line, fdarr, bres));
 }
