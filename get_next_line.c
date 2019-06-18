@@ -6,7 +6,7 @@
 /*   By: japarbs <japarbs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/08 16:18:40 by japarbs           #+#    #+#             */
-/*   Updated: 2019/06/18 00:29:04 by japarbs          ###   ########.fr       */
+/*   Updated: 2019/06/18 15:45:24 by japarbs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int		get_next_line(const int fd, char **line)
 	char			buffer[BUFF_SIZE + 1];
 	char			*tmp;
 
-	if (!fd || fd <= -1 || fd > OPEN_MAX || !line)
+	if (fd <= -1 || fd > OPEN_MAX || !line)
 		return (-1);
 	if (!(fdarr[fd]))
 		fdarr[fd] = ft_strnew(0);
