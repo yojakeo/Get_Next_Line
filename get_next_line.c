@@ -6,7 +6,7 @@
 /*   By: japarbs <japarbs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/08 16:18:40 by japarbs           #+#    #+#             */
-/*   Updated: 2019/06/17 03:00:45 by japarbs          ###   ########.fr       */
+/*   Updated: 2019/06/18 00:29:04 by japarbs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 /*
 **	Process_line takes the fd's fdarr char string and finds the index of \n.
-**	this index is stored in lenres (length result)
+**	this index is stored in nlpos (newline positon)
 **	Using that len as how long the line is and pushing all till \n to **line.
 **	after **line is done, the leftover chars are stored in fdarr[fd]
 **	to be used in the next recall of get_next_line.
@@ -24,7 +24,7 @@
 
 int		process_line(int fd, char **line, char **fdarr, int bres)
 {
-	size_t			lenres;
+	size_t			nlpos;
 	size_t			statsize;
 	char			*tmp;
 
@@ -33,11 +33,13 @@ int		process_line(int fd, char **line, char **fdarr, int bres)
 		ft_strdel(&fdarr[fd]);
 		return (0);
 	}
-	lenres = ft_strdlen(fdarr[fd], '\n');
-	if (!(*line = ft_strsub(fdarr[fd], 0, lenres)))
+	nlpos = 0;
+	while (fdarr[fd][nlpos] != '\n' && fdarr[fd][nlpos] != '\0')
+		nlpos++;
+	if (!(*line = ft_strsub(fdarr[fd], 0, nlpos)))
 		return (-1);
 	statsize = ft_strlen(ft_strchr(fdarr[fd], '\n'));
-	if (!(tmp = ft_strsub(fdarr[fd], lenres + 1, statsize)))
+	if (!(tmp = ft_strsub(fdarr[fd], nlpos + 1, statsize)))
 		return (-1);
 	ft_strdel(&fdarr[fd]);
 	fdarr[fd] = tmp;
