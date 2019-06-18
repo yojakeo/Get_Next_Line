@@ -6,7 +6,7 @@
 /*   By: japarbs <japarbs@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/06/08 16:18:40 by japarbs           #+#    #+#             */
-/*   Updated: 2019/06/18 15:45:24 by japarbs          ###   ########.fr       */
+/*   Updated: 2019/06/18 16:14:03 by japarbs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int		process_line(int fd, char **line, char **fdarr, int bres)
 }
 
 /*
-**	Runs return checks and keeps track of FDs and handles return values.
+**	Keeps track of FDs and handles return values.
 **	fdarr is an hash index, the pointer is a holder of the current read string
 **	that will later be pushed to **line, this allows the function to handle
 **	mutiple FDs at once. fdarr also is used as storage between lines
